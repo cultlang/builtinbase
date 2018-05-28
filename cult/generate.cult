@@ -197,7 +197,7 @@ namespace %{1}
 {
   extern craft::lisp::BuiltinModuleDescription Builtin%{2};
 
-  %{3}_EXPORTED craft::instance<craft::lisp::Module> make_bindings(craft::instance<craft::lisp::Namespace> ns, craft::instance<> loader);
+  %{3}_EXPORTED void make_bindings(craft::instance<craft::lisp::Module>);
 }}  
 """)
 
@@ -215,11 +215,9 @@ using namespace %{0}::%{1};
 #define lMM sem->builtin_implementMultiMethod
 #define MoD "%{1}"
 
-instance<Module> %{0}::%{1}::make_bindings(instance<lisp::Namespace> ns, instance<> loader)
+void %{0}::%{1}::make_bindings(craft::instance<craft::lisp::Module> ret)
 {
-  auto ret = instance<Module>::make(ns, loader);
-  auto sem = instance<CultSemantics>::make(ret);
-  ret->builtin_setSemantics(sem);
+  auto semantics = ret->require<lisp::CultSemantics>();
 
   lMM(MoD, []() { return instance<bool>::make();});
   
